@@ -5,7 +5,20 @@ const app = express();
 app.use(helmet.hidePoweredBy());
 
 app.use(helmet.frameguard({ action: 'deny' }));
-
+app.use(helmet.xssFilter());
+app.use(helmet.noSniff());
+app.use(helmet.ieNoOpen());
+app.use(helmet.hsts({maxAge: 90*24*60*60, force: true}));
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.noCache());
+app.use(helmet.contentSecurityPolicy({directives: {defaultSrc: ["'self'"], scriptSrc: ["'self'", "trusted-cdn.com"]}}));
+app.use(helmet.referrerPolicy({policy: 'same-origin'}));
+app.use(helmet.featurePolicy({features: {geolocation: ["'none'"], midi: ["'none'"], syncXhr: ["'none'"]}}));
+app.use(helmet.permittedCrossDomainPolicies({permittedPolicies: 'master-only'}));
+app.use(helmet.expectCt({maxAge: 123}));
+app.use(helmet.dnsPrefetchControl({allow: false}));
+app.use(helmet.permittedCrossDomainPolicies({permittedPolicies: 'none'}));
+app.use(helmet.referrerPolicy({policy: 'no-referrer'}));
 
 
 
